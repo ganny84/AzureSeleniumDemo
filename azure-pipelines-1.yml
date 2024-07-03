@@ -6,9 +6,16 @@ pool:
 
 steps:
 - task: Maven@3
+- task: VSTest@3
   inputs:
-    mavenPomFile: 'pom.xml'
-    goals: 'clean install'
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: |
+      **\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    vsTestVersion: '17.0'
+
 
 - task: PublishTestResults@2
   inputs:
