@@ -7,16 +7,25 @@ trigger:
 - master
 
 pool:
-  vmImage: SelfHostedPool
+  vmImage: 'windows-latest'
 
-steps:
-- task: Maven@3
-  inputs:
-    mavenPomFile: 'pom.xml'
-    mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.8'
-    jdkArchitectureOption: 'x64'
-    publishJUnitResults: true
-    testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'package'
+jobs:
+- job: Build
+  displayName: 'Build and Test Job'
+  steps:
+  - task: JavaToolInstaller@0
+    inputs:
+      versionSpec: '1.8'
+      jdkArchitectureOption: 'x64'
+      jdkSourceOption: 'PreInstalled' # This option makes use of the pre-installed JDK
+
+  - task: Maven@3
+    inputs:
+      mavenPomFile: 'pom.xml'
+      mavenOptions: '-Xmx3072m'
+      javaHomeOption: 'JDKVersion'
+      jdkVersionOption: '1.8'
+      jdkArchitectureOption: 'x64'
+      publishJUnitResults: true
+      testResultsFiles: '**/surefire-reports/TEST-*.xml'
+      goals: 'package'
